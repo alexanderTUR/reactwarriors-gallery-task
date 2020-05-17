@@ -67,7 +67,7 @@ class PhotosPage extends Component {
                   <Card
                     bg="secondary"
                     text="white"
-                    className="mt-3 mb-3 user-card"
+                    className="mt-3 mb-3 photo-card"
                   >
                     <Card.Img
                       variant="top"

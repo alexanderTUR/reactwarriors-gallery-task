@@ -11,3 +11,22 @@
 .album-card__title {
   text-transform: capitalize;
 }
+
+.user-card {
+  .card-title {
+    text-transform: capitalize;
+  }
+}
+
+.photo-card {
+  .card-img-top {
+    cursor: pointer;
+  }
+  .card-title {
+    text-transform: capitalize;
+  }
+}
+
+.carousel-caption {
+  text-transform: capitalize;
+}
