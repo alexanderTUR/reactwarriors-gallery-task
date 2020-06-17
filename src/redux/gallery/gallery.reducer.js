@@ -7,8 +7,8 @@ const initialState = {
   albumsIsErrored: false,
   albumsIsLoading: false,
   albums: [],
-  photosIsErrored: false,
-  photosIsLoading: false,
+  photosIsErrored: {},
+  photosIsLoading: {},
   photos: {},
 };
 
@@ -49,7 +49,7 @@ const galleryReduccer = (state = initialState, action) => {
         ...state,
         photosIsErrored: {
           ...state.photosIsErrored,
-          [action.payload.id]: action.payload.bool,
+          [action.payload.id]: action.payload.isErrored,
         },
       };
     case types.FETCH_PHOTOS_BY_ALBUM_LOADING:
@@ -57,7 +57,7 @@ const galleryReduccer = (state = initialState, action) => {
         ...state,
         photosIsLoading: {
           ...state.photosIsLoading,
-          [action.payload.id]: action.payload.bool,
+          [action.payload.id]: action.payload.isLoading,
         },
       };
     case types.FETCH_PHOTOS_BY_ALBUM_SUCCESS:

@@ -10,12 +10,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(galleryActions, dispatch);
 
-export const withRedux = (Component) =>
+export const withGallery = (Component) =>
   connect(
     mapStateToProps,
     mapDispatchToProps
   )(
-    class withRedux extends React.Component {
+    class withGallery extends React.Component {
       render() {
         return <Component {...this.props} />;
       }

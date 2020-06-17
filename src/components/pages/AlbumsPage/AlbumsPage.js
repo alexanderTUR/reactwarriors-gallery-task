@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
-import { withRedux } from '../../../hoc/withRedux';
-import AlbumCard from './AlbumCard';
+import { withGallery } from '../../../hoc/withGallery';
+import { AlbumCard } from './AlbumCard';
 
-class AlbumsPage extends Component {
+class AlbumsPageView extends Component {
   componentDidMount() {
-    const { id } = this.props.match.params;
-    this.props.fetchAlbumsByUserData(
-      `https://jsonplaceholder.typicode.com/users/${id}/albums`
-    );
+    const { userId } = this.props.match.params;
+    this.props.fetchAlbumsByUserData(userId);
   }
 
   render() {
     const { albumsIsLoading, albumsIsErrored, albums } = this.props;
-    return (
-      <Container className="pt-3 pb-3">
-        {albumsIsErrored ? (
+
+    if (albumsIsErrored) {
+      return (
+        <Container className="pt-3 pb-3">
           <Row className="justify-content-center">
             <Col md="auto">
               <Alert variant="danger">
@@ -23,27 +22,37 @@ class AlbumsPage extends Component {
               </Alert>
             </Col>
           </Row>
-        ) : albumsIsLoading ? (
+        </Container>
+      );
+    }
+
+    if (albumsIsLoading) {
+      return (
+        <Container className="pt-3 pb-3">
           <Row className="justify-content-center">
             <Col md="auto">
               <Spinner animation="border" variant="secondary" />
             </Col>
           </Row>
-        ) : (
-          <Row xs={1} md={2} lg={4}>
-            {albums.map((album) => (
-              <Col key={album.id}>
-                <AlbumCard
-                  album={album}
-                  userId={this.props.match.params.id}
-                ></AlbumCard>
-              </Col>
-            ))}
-          </Row>
-        )}
+        </Container>
+      );
+    }
+
+    return (
+      <Container className="pt-3 pb-3">
+        <Row xs={1} md={2} lg={4}>
+          {albums.map((album) => (
+            <Col key={album.id}>
+              <AlbumCard
+                album={album}
+                userId={this.props.match.params.userId}
+              ></AlbumCard>
+            </Col>
+          ))}
+        </Row>
       </Container>
     );
   }
 }
 
-export default withRedux(AlbumsPage);
+export const AlbumsPage = withGallery(AlbumsPageView);

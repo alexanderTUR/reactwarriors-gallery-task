@@ -1,16 +1,27 @@
 import * as types from './gallery.types';
 
-export const fetchUsersError = (bool) => {
+const callApi = (url) => {
+  return fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      return response;
+    })
+    .then((response) => response.json());
+};
+
+export const fetchUsersError = (isErrored) => {
   return {
     type: types.FETCH_USERS_ERROR,
-    payload: bool,
+    payload: isErrored,
   };
 };
 
-export const fetchUsersLoading = (bool) => {
+export const fetchUsersLoading = (isLoading) => {
   return {
     type: types.FETCH_USERS_LOADING,
-    payload: bool,
+    payload: isLoading,
   };
 };
 
@@ -21,35 +32,30 @@ export const fetchUsersSuccess = (users) => {
   };
 };
 
-export const fetchUsersData = (url) => {
+export const fetchUsersData = () => {
   return (dispatch) => {
     dispatch(fetchUsersLoading(true));
 
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
+    callApi('https://jsonplaceholder.typicode.com/users')
+      .then((users) => {
         dispatch(fetchUsersLoading(false));
-        return response;
+        dispatch(fetchUsersSuccess(users));
       })
-      .then((response) => response.json())
-      .then((users) => dispatch(fetchUsersSuccess(users)))
       .catch(() => dispatch(fetchUsersError(true)));
   };
 };
 
-export const fetchAlbumsByUserError = (bool) => {
+export const fetchAlbumsByUserError = (isErrored) => {
   return {
     type: types.FETCH_ALBUMS_BY_USER_ERROR,
-    payload: bool,
+    payload: isErrored,
   };
 };
 
-export const fetchAlbumsByUserLoading = (bool) => {
+export const fetchAlbumsByUserLoading = (isLoading) => {
   return {
     type: types.FETCH_ALBUMS_BY_USER_LOADING,
-    payload: bool,
+    payload: isLoading,
   };
 };
 
@@ -60,59 +66,55 @@ export const fetchAlbumsByUserSuccess = (albums) => {
   };
 };
 
-export const fetchAlbumsByUserData = (url) => {
+export const fetchAlbumsByUserData = (userId) => {
   return (dispatch) => {
     dispatch(fetchAlbumsByUserLoading(true));
 
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
+    callApi(`https://jsonplaceholder.typicode.com/users/${userId}/albums`)
+      .then((albums) => {
         dispatch(fetchAlbumsByUserLoading(false));
-        return response;
+        dispatch(fetchAlbumsByUserSuccess(albums));
       })
-      .then((response) => response.json())
-      .then((albums) => dispatch(fetchAlbumsByUserSuccess(albums)))
       .catch(() => dispatch(fetchAlbumsByUserError(true)));
   };
 };
 
-export const fetchPhotosByAlbumError = (id, bool) => {
+export const fetchPhotosByAlbumError = ({ albumId, isErrored }) => {
   return {
     type: types.FETCH_PHOTOS_BY_ALBUM_ERROR,
-    payload: { id, bool },
+    payload: { id: albumId, isErrored },
   };
 };
 
-export const fetchPhotosByAlbumLoading = (id, bool) => {
+export const fetchPhotosByAlbumLoading = ({ albumId, isLoading }) => {
   return {
     type: types.FETCH_PHOTOS_BY_ALBUM_LOADING,
-    payload: { id, bool },
+    payload: { id: albumId, isLoading },
   };
 };
 
-export const fetchPhotosByAlbumSuccess = (id, photos) => {
+export const fetchPhotosByAlbumSuccess = (albumId, photos) => {
   return {
     type: types.FETCH_PHOTOS_BY_ALBUM_SUCCESS,
-    payload: { id, photos },
+    payload: { id: albumId, photos },
   };
 };
 
-export const fetchPhotosByAlbumData = (url, id) => {
+export const fetchPhotosByAlbumData = (albumId) => {
   return (dispatch) => {
-    dispatch(fetchPhotosByAlbumLoading(id, true));
+    dispatch(fetchPhotosByAlbumLoading({ albumId: albumId, isLoading: true }));
 
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response;
+    callApi(`https://jsonplaceholder.typicode.com/albums/${albumId}/photos`)
+      .then((photos) => {
+        dispatch(fetchPhotosByAlbumSuccess(albumId, photos));
       })
-      .then((response) => response.json())
-      .then((photos) => dispatch(fetchPhotosByAlbumSuccess(id, photos)))
-      .then(() => dispatch(fetchPhotosByAlbumLoading(id, false)))
-      .catch(() => dispatch(fetchPhotosByAlbumError(id, true)));
+      .then(() =>
+        dispatch(
+          fetchPhotosByAlbumLoading({ albumId: albumId, isLoading: false })
+        )
+      )
+      .catch(() =>
+        dispatch(fetchPhotosByAlbumError({ albumId: albumId, isLoading: true }))
+      );
   };
 };
