@@ -1,33 +1,34 @@
-import React, { Component } from 'react';
-import { Alert, Card, Button, Spinner } from 'react-bootstrap';
+import React, { PureComponent } from 'react';
+import { Card, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { withGallery } from '../../../hoc/withGallery';
+import { Error } from '../../../components/ui/Error';
+import { Loader } from '../../../components/ui/Spinner';
+import { connect } from 'react-redux';
+import { fetchPhotosByAlbumData } from '../../../redux/gallery/gallery.actions';
 
-class AlbumCardView extends Component {
+class AlbumCardView extends PureComponent {
   componentDidMount() {
     const { album } = this.props;
     this.props.fetchPhotosByAlbumData(album.id);
   }
 
   photosLoadingInProgress = () => {
-    const { photos, albums, photosIsLoading, album } = this.props;
-    return (
-      Object.keys(photos).length === 0 ||
-      Object.keys(album).length === 0 ||
-      Object.keys(albums).length === 0 ||
-      photosIsLoading[album.id]
-    );
+    const { photosIsLoading } = this.props;
+    if (typeof photosIsLoading === 'undefined') {
+      return true;
+    }
+    return photosIsLoading;
   };
 
   render() {
     const { album, photos, photosIsErrored, userId } = this.props;
 
-    if (photosIsErrored[album.id]) {
+    if (photosIsErrored) {
       return (
         <Card.Body>
-          <Alert variant="danger">
-            Sorry! There was an error loading album.
-          </Alert>
+          <Error>
+            <p>Sorry! There was an error loading album.</p>
+          </Error>
         </Card.Body>
       );
     }
@@ -35,17 +36,19 @@ class AlbumCardView extends Component {
     if (this.photosLoadingInProgress()) {
       return (
         <Card.Body className="text-center">
-          <Spinner animation="border" variant="light" />
+          <Loader />
         </Card.Body>
       );
     }
 
+    const firstPhoto = photos[0];
+
     return (
       <Card bg="secondary" text="white" className="mt-3 mb-3 user-card">
-        <Card.Img variant="top" src={photos[album.id][0].thumbnailUrl} />
+        <Card.Img variant="top" src={firstPhoto.thumbnailUrl} />
         <Card.Body>
-          <Card.Title>{photos[album.id][0].title}</Card.Title>
-          <Card.Text>{`Photos in album: ${photos[album.id].length}`}</Card.Text>
+          <Card.Title>{firstPhoto.title}</Card.Title>
+          <Card.Text>{`Photos in album: ${photos.length}`}</Card.Text>
           <LinkContainer to={`/user/${userId}/albums/${album.id}`}>
             <Button variant="outline-light" size="sm" block>
               Show Photos
@@ -57,4 +60,14 @@ class AlbumCardView extends Component {
   }
 }
 
-export const AlbumCard = withGallery(AlbumCardView);
+export const AlbumCard = connect(
+  (state, props) => {
+    const { album } = props;
+    return {
+      photos: state.galleryReduccer.photos[album.id],
+      photosIsLoading: state.galleryReduccer.photosIsLoading[album.id],
+      photosIsErrored: state.galleryReduccer.photosIsErrored[album.id],
+    };
+  },
+  { fetchPhotosByAlbumData }
+)(AlbumCardView);

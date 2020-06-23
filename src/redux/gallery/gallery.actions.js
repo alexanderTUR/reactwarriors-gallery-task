@@ -107,14 +107,12 @@ export const fetchPhotosByAlbumData = (albumId) => {
     callApi(`https://jsonplaceholder.typicode.com/albums/${albumId}/photos`)
       .then((photos) => {
         dispatch(fetchPhotosByAlbumSuccess(albumId, photos));
-      })
-      .then(() =>
         dispatch(
           fetchPhotosByAlbumLoading({ albumId: albumId, isLoading: false })
-        )
-      )
+        );
+      })
       .catch(() =>
-        dispatch(fetchPhotosByAlbumError({ albumId: albumId, isLoading: true }))
+        dispatch(fetchPhotosByAlbumError({ albumId: albumId, isErrored: true }))
       );
   };
 };

@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
 import { withGallery } from '../../../hoc/withGallery';
-import {
-  Container,
-  Row,
-  Col,
-  Alert,
-  Spinner,
-  Modal,
-  Carousel,
-  Card,
-} from 'react-bootstrap';
+import { Container, Row, Col, Modal, Carousel, Card } from 'react-bootstrap';
+import { Error } from '../../../components/ui/Error';
+import { Loader } from '../../../components/ui/Spinner';
 
 class PhotosPageView extends Component {
   state = {
@@ -57,9 +50,7 @@ class PhotosPageView extends Component {
         <Container className="pt-3 pb-3">
           <Row className="justify-content-center">
             <Col md="auto">
-              <Alert variant="danger">
-                Sorry! There was an error loading photos.
-              </Alert>
+              <Error>Sorry! There was an error loading photos.</Error>
             </Col>
           </Row>
         </Container>
@@ -71,7 +62,7 @@ class PhotosPageView extends Component {
         <Container className="pt-3 pb-3">
           <Row className="justify-content-center">
             <Col md="auto">
-              <Spinner animation="border" variant="secondary" />
+              <Loader />
             </Col>
           </Row>
         </Container>

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { withGallery } from '../../../hoc/withGallery';
 import { AlbumCard } from './AlbumCard';
+import { Error } from '../../../components/ui/Error';
+import { Loader } from '../../../components/ui/Spinner';
 
 class AlbumsPageView extends Component {
   componentDidMount() {
@@ -17,9 +19,9 @@ class AlbumsPageView extends Component {
         <Container className="pt-3 pb-3">
           <Row className="justify-content-center">
             <Col md="auto">
-              <Alert variant="danger">
-                Sorry! There was an error loading albums.
-              </Alert>
+              <Error>
+                <p>Sorry! There was an error loading albums.</p>
+              </Error>
             </Col>
           </Row>
         </Container>
@@ -31,7 +33,7 @@ class AlbumsPageView extends Component {
         <Container className="pt-3 pb-3">
           <Row className="justify-content-center">
             <Col md="auto">
-              <Spinner animation="border" variant="secondary" />
+              <Loader />
             </Col>
           </Row>
         </Container>
