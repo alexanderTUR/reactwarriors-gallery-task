@@ -4,7 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Error } from '../../../components/ui/Error';
 import { Loader } from '../../../components/ui/Spinner';
 import { connect } from 'react-redux';
-import { fetchPhotosByAlbumData } from '../../../redux/gallery/gallery.actions';
+import { fetchPhotosByAlbumData } from '../../../redux/gallery/gallery';
 
 class AlbumCardView extends PureComponent {
   componentDidMount() {
@@ -64,9 +64,9 @@ export const AlbumCard = connect(
   (state, props) => {
     const { album } = props;
     return {
-      photos: state.galleryReduccer.photos[album.id],
-      photosIsLoading: state.galleryReduccer.photosIsLoading[album.id],
-      photosIsErrored: state.galleryReduccer.photosIsErrored[album.id],
+      photos: state.gallery.photos[album.id],
+      photosIsLoading: state.gallery.photosIsLoading[album.id],
+      photosIsErrored: state.gallery.photosIsErrored[album.id],
     };
   },
   { fetchPhotosByAlbumData }

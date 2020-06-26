@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { withGallery } from '../../../hoc/withGallery';
+import { withUsers } from '../../../hoc/withUsers';
 import { Error } from '../../../components/ui/Error';
 import { Loader } from '../../../components/ui/Spinner';
 
@@ -63,4 +63,4 @@ class UsersPageView extends Component {
   }
 }
 
-export const UsersPage = withGallery(UsersPageView);
+export const UsersPage = withUsers(UsersPageView);

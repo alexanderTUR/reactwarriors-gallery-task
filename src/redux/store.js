@@ -1,8 +1,9 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import rootReducer from './rootReducer';
+import { configureStore } from '@reduxjs/toolkit';
+import galleryReduccer from './gallery/gallery';
+import usersReduccer from './users/users';
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+const store = configureStore({
+  reducer: { users: usersReduccer, gallery: galleryReduccer },
+});
 
 export default store;

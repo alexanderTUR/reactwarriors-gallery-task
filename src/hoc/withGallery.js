@@ -1,14 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as galleryActions from '../redux/gallery/gallery.actions';
+import {
+  fetchAlbumsByUserData,
+  fetchPhotosByAlbumData,
+} from '../redux/gallery/gallery';
 
-const mapStateToProps = (state) => {
-  return state.galleryReduccer;
-};
+const mapStateToProps = (state) => state.gallery;
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(galleryActions, dispatch);
+  bindActionCreators(
+    { fetchAlbumsByUserData, fetchPhotosByAlbumData },
+    dispatch
+  );
 
 export const withGallery = (Component) =>
   connect(
